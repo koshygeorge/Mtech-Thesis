@@ -7,7 +7,7 @@ from pyimagesearch.panorama_mod import Stitcher
 
 # Set the path to images folder here
 # Can modify this to a cli arg if required (using argparse) 
-images_path = './images_3/'
+images_path = './images/'
 
 # Function to get all files in a specified folder
 def get_all_files(path):
@@ -43,8 +43,6 @@ def main():
 
     # Iterating through rest of the images
     for idx, image in enumerate(images[1:]):
-        print idx
-        print image
         (result, vis) = stitch_images(image1=result, image2=image, mode = 1 if idx == 0 else 2)
 
     cv2.imwrite("./output/result.jpg", result)
