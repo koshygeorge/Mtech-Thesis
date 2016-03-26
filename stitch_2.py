@@ -3,11 +3,11 @@
 import os
 import cv2
 import imutils
-from pyimagesearch.panorama import Stitcher
+from pyimagesearch.panorama_mod import Stitcher
 
 # Set the path to images folder here
 # Can modify this to a cli arg if required (using argparse) 
-images_path = './images/'
+images_path = './images_3/'
 
 # Function to get all files in a specified folder
 def get_all_files(path):
@@ -20,16 +20,15 @@ def get_all_files(path):
 
 #Function to stitch images 2 at a time
 def stitch_images(image1, image2, mode):
+    print mode
     if mode == 1:
         imageA = cv2.imread(image1)
+        imageA = imutils.resize(imageA, width=900)
     elif mode == 2:
         imageA = image1
 
-    imageA = imutils.resize(imageA, width=400)
     imageB = cv2.imread(image2)
-    imageB = imutils.resize(imageB, width=400)
-    cv2.imshow("A", imageA)
-    cv2.imshow("B", imageB)
+    imageB = imutils.resize(imageB, width=900)
 
     stitcher = Stitcher()
     (result, vis) = stitcher.stitch([imageA, imageB], showMatches=True)
@@ -37,18 +36,20 @@ def stitch_images(image1, image2, mode):
 
 def main():
     images = get_all_files(path=images_path)
+    result = images[0]
 
     # Hardcoding the first 2 images
-    (result, vis) = stitch_images(image1=images[0], image2=images[1], mode=1)
+    # (result, vis) = stitch_images(image1=images[0], image2=images[3], mode=1)
 
     # Iterating through rest of the images
-    for image in images[2:]:
-        if result is None:
-            os.sys.exit("Images can't be stitched");
-        (result, vis) = stitch_images(image1=result, image2=image, mode=2)
+    for idx, image in enumerate(images[1:]):
+        print idx
+        print image
+        (result, vis) = stitch_images(image1=result, image2=image, mode = 1 if idx == 0 else 2)
 
-    cv2.imshow("Result", result)
-    cv2.waitKey(0)
+    cv2.imwrite("./output/result.jpg", result)
+    # cv2.imshow("Result", result)
+    # cv2.waitKey(0)
 
 if __name__ == '__main__':
     main()
