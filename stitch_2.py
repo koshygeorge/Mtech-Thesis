@@ -7,10 +7,10 @@ from pyimagesearch.panorama_mod import Stitcher
 
 # Set the path to images folder here
 # Can modify this to a cli arg if required (using argparse) 
-images_path = './images/'
+images_path = '../data/set-6'
 
 # Function to get all files in a specified folder
-def get_all_files(path):
+def getAllFiles(path):
     files = []
     for dirpath, dirnames, filenames in os.walk(path):
         for filename in filenames:
@@ -19,35 +19,34 @@ def get_all_files(path):
     return files
 
 #Function to stitch images 2 at a time
-def stitch_images(image1, image2, mode):
+def stitchImages(image1, image2, mode):
     print mode
     if mode == 1:
-        imageA = cv2.imread(image1)
-        imageA = imutils.resize(imageA, width=900)
+        imageA = readFromDiskAndResize(image1)
+        imageB = readFromDiskAndResize(image2)
     elif mode == 2:
-        imageA = image1
-
-    imageB = cv2.imread(image2)
-    imageB = imutils.resize(imageB, width=900)
+        imageA = readFromDiskAndResize(image1)
+        imageB = image2
 
     stitcher = Stitcher()
     (result, vis) = stitcher.stitch([imageA, imageB], showMatches=True)
     return (result, vis)
 
-def main():
-    images = get_all_files(path=images_path)
-    result = images[0]
+def readFromDiskAndResize(location):
+    image = cv2.imread(location)
+    image = imutils.resize(image, width=900)
+    return image
 
-    # Hardcoding the first 2 images
-    # (result, vis) = stitch_images(image1=images[0], image2=images[3], mode=1)
+def main():
+    images = getAllFiles(path=images_path)
+    result = images[0]
 
     # Iterating through rest of the images
     for idx, image in enumerate(images[1:]):
-        (result, vis) = stitch_images(image1=result, image2=image, mode = 1 if idx == 0 else 2)
+        (result, vis) = stitchImages(image1=image, image2=result, mode = 1 if idx == 0 else 2)
+        cv2.imwrite("./output/result"+ str(idx) +".png", result)
 
-    cv2.imwrite("./output/result.jpg", result)
-    # cv2.imshow("Result", result)
-    # cv2.waitKey(0)
+    cv2.imwrite("./output/result.png", result)
 
 if __name__ == '__main__':
     main()
