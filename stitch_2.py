@@ -3,11 +3,11 @@
 import os
 import cv2
 import imutils
-from pyimagesearch.panorama_mod import Stitcher
+from incl.panorama_mod import Stitcher
 
 # Set the path to images folder here
 # Can modify this to a cli arg if required (using argparse) 
-images_path = '../data/set-6'
+images_path = 'C:\\Users\\Nikhil\\Desktop\\panorama-stitching\\panorama-stitching\\images\\Images'
 
 # Function to get all files in a specified folder
 def getAllFiles(path):
@@ -34,7 +34,7 @@ def stitchImages(image1, image2, mode):
 
 def readFromDiskAndResize(location):
     image = cv2.imread(location)
-    image = imutils.resize(image, width=900)
+    image = imutils.resize(image, width=500)
     return image
 
 def main():
@@ -44,9 +44,9 @@ def main():
     # Iterating through rest of the images
     for idx, image in enumerate(images[1:]):
         (result, vis) = stitchImages(image1=image, image2=result, mode = 1 if idx == 0 else 2)
-        cv2.imwrite("./output/result"+ str(idx) +".png", result)
+        #cv2.imwrite("C:\\Users\\Nikhil\\Desktop\\Mtech-Thesis-master\\Mtech-Thesis-master-with-FLANN\\output\\result"+ str(idx) +".png", result)
 
-    cv2.imwrite("./output/result.png", result)
+    cv2.imwrite("C:\\Users\\Nikhil\\Desktop\\Mtech-Thesis-master\\Mtech-Thesis-master-with-FLANN\\output\\result.png", result)
 
 if __name__ == '__main__':
     main()
